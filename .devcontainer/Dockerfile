@@ -14,6 +14,7 @@ RUN apt -y install zip
 RUN adduser spatiotemporal
 WORKDIR /home/spatiotemporal
 
+RUN cd /home/spatiotemporal
 RUN git clone -b voxlogica2-2024 --single-branch https://github.com/vincenzoml/VoxLogicA.git VoxLogicA2
 RUN cd VoxLogicA2/src && dotnet build
 RUN cd ..
@@ -24,8 +25,15 @@ RUN cd VoxLogicA/src && make release
 RUN apt -y install python3 
 RUN apt -y install python3-pip
 RUN apt -y install python3-venv
+RUN apt -y install ffmpeg
 
-RUN python3 -m venv venv
+RUN chown -R spatiotemporal VoxLogicA
+RUN chown -R spatiotemporal VoxLogicA2
+RUN mkdir /venv
+RUN chown -R spatiotemporal /venv
+USER spatiotemporal
+
+RUN python3 -m venv /venv
 
 #RUN mkdir /pyib
 #RUN export PATH=$PATH:/pylib/.local/bin
@@ -33,11 +41,8 @@ RUN python3 -m venv venv
 
 #RUN python3 -m pip install --upgrade pip
 
-RUN venv/bin/pip3 install sk-video
-RUN venv/bin/pip3 install scikit-image
-
-RUN chown -R spatiotemporal VoxLogicA
-RUN chown -R spatiotemporal VoxLogicA2
-USER spatiotemporal
+RUN /venv/bin/pip3 install sk-video
+RUN /venv/bin/pip3 install scikit-image
+RUN /venv/bin/pip3 install numpy
 
 ENV PATH="/venv/bin:$PATH"
