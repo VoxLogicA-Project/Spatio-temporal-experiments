@@ -33,6 +33,7 @@ def main():
     frames = skvideo.io.vread(args.videoFile + ".mkv", outputdict={"-pix_fmt": "rgba"})
     print(len(frames))
     numFrames = 200
+    
     for i in range(0,numFrames):
         name = "/home/spatiotemporal/VoxLogicA2/src/frames/video_" + str(i) + ".png"
         skimage.io.imsave(name, frames[i])
