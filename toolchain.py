@@ -32,7 +32,7 @@ def main():
     Path("/home/spatiotemporal/VoxLogicA2/src/frames").mkdir(parents=True, exist_ok=True)
     frames = skvideo.io.vread(args.videoFile + ".mkv", outputdict={"-pix_fmt": "rgba"})
     print(len(frames))
-    numFrames = 200
+    numFrames = 1600
     
     for i in range(0,numFrames):
         name = "/home/spatiotemporal/VoxLogicA2/src/frames/video_" + str(i) + ".png"

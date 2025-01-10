@@ -4,45 +4,27 @@ RUN apt update
 RUN apt -y dist-upgrade
 RUN apt -y install git git-lfs wget make
 
-RUN wget https://packages.microsoft.com/config/ubuntu/23.10/packages-microsoft-prod.deb 
-RUN dpkg -i packages-microsoft-prod.deb
+# RUN wget https://packages.microsoft.com/config/ubuntu/23.10/packages-microsoft-prod.deb 
+# RUN dpkg -i packages-microsoft-prod.deb
 
 RUN apt update
-RUN apt -y install dotnet-sdk-8.0
-RUN apt -y install zip
+RUN apt -y install dotnet-sdk-9.0 zip python3 python3-pip python3-venv ffmpeg htop
 
-RUN adduser spatiotemporal
+#RUN adduser spatiotemporal
+RUN mkdir /home/spatiotemporal
+RUN chown ubuntu /home/spatiotemporal
 WORKDIR /home/spatiotemporal
 
-RUN cd /home/spatiotemporal
+USER ubuntu
+
 RUN git clone -b voxlogica2-2024 --single-branch https://github.com/vincenzoml/VoxLogicA.git VoxLogicA2
-RUN cd VoxLogicA2/src && dotnet build
-RUN cd ..
+RUN (cd /home/spatiotemporal/VoxLogicA2/src && dotnet build -c release)
 
 RUN git clone -b experimental --single-branch https://github.com/vincenzoml/VoxLogicA.git
-RUN cd VoxLogicA/src && make release
+RUN (cd /home/spatiotemporal/VoxLogicA/src && make release)
 
-RUN apt -y install python3 
-RUN apt -y install python3-pip
-RUN apt -y install python3-venv
-RUN apt -y install ffmpeg
-
-RUN chown -R spatiotemporal VoxLogicA
-RUN chown -R spatiotemporal VoxLogicA2
-RUN mkdir /venv
-RUN chown -R spatiotemporal /venv
-USER spatiotemporal
-
-RUN python3 -m venv /venv
-
-#RUN mkdir /pyib
-#RUN export PATH=$PATH:/pylib/.local/bin
-#ENV PYTHONPATH=/pylib
-
-#RUN python3 -m pip install --upgrade pip
-
-RUN /venv/bin/pip3 install sk-video
-RUN /venv/bin/pip3 install scikit-image
-RUN /venv/bin/pip3 install numpy
-
-ENV PATH="/venv/bin:$PATH"
+RUN python3 -m venv /home/spatiotemporal/venv
+RUN /home/spatiotemporal/venv/bin/pip3 install sk-video
+RUN /home/spatiotemporal/venv/bin/pip3 install scikit-image
+RUN /home/spatiotemporal/venv/bin/pip3 install numpy
+ENV PATH="/home/spatiotemporal/venv/bin:$PATH"
