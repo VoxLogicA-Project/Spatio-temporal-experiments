@@ -29,28 +29,29 @@ def main():
 
     args = parser.parse_args()
     
-    Path("/home/spatiotemporal/VoxLogicA2/src/frames").mkdir(parents=True, exist_ok=True)
+    Path("/home/ubuntu/VoxLogicA2/src/frames").mkdir(parents=True, exist_ok=True)
     frames = skvideo.io.vread(args.videoFile + ".mkv", outputdict={"-pix_fmt": "rgba"})
     print(len(frames))
     numFrames = 400
     
     for i in range(0,numFrames):
-        name = "/home/spatiotemporal/VoxLogicA2/src/frames/video_" + str(i) + ".png"
+        name = "/home/ubuntu/VoxLogicA2/src/frames/video_" + str(i) + ".png"
         skimage.io.imsave(name, frames[i])
 
     args = parser.parse_args()
     spec = args.filename.split(".")[0]
     #spec = spec2.split("/")[-1]
 
-    os.chdir("/home/spatiotemporal/VoxLogicA2/src")
+    os.chdir("/home/ubuntu/VoxLogicA2/src")
     subprocess.run("python3 temporal.py " + args.filename + " " + str(numFrames), shell=True)
-    subprocess.run("cp stdlib2.imgql /home/spatiotemporal/VoxLogicA/src", shell=True)
+    subprocess.run("cp stdlib2.imgql /home/ubuntu/VoxLogicA/src", shell=True)
 
-    os.chdir("/home/spatiotemporal/VoxLogicA/src")
+    os.chdir("/home/ubuntu/VoxLogicA/src")
 
     subprocess.run("rm -rf frames", shell=True)
-    subprocess.run("mv /home/spatiotemporal/VoxLogicA2/src/frames /home/spatiotemporal/VoxLogicA/src", shell=True)
-    subprocess.run("./bin/release/net7.0/linux-x64/VoxLogicA " + spec + "-temporal-new-VL1.imgql", shell=True)
+    subprocess.run("mv /home/ubuntu/VoxLogicA2/src/frames /home/ubuntu/VoxLogicA/src", shell=True)
+    subprocess.run("mv /home/ubuntu/VoxLogicA2/src/" + spec + "-temporal-new-VL1.imgql /home/ubuntu/VoxLogicA/src", shell=True)
+    subprocess.run("/home/ubuntu/VoxLogicA/releases/VoxLogicA_1.3.3-experimental_linux-x64/VoxLogicA " + spec + "-temporal-new-VL1.imgql", shell=True)
 
 if __name__ == "__main__":
     main()
