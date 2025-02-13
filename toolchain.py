@@ -6,6 +6,7 @@ import skvideo.io
 import skimage.io
 import numpy
 import os
+import time
 numpy.float = numpy.float64
 numpy.int = numpy.int_
 from pathlib import Path
@@ -31,12 +32,14 @@ def main():
     
     Path("/home/ubuntu/VoxLogicA2/src/frames").mkdir(parents=True, exist_ok=True)
     frames = skvideo.io.vread(args.videoFile + ".mkv", outputdict={"-pix_fmt": "rgba"})
-    print(len(frames))
-    numFrames = 400
+    numFrames = len(frames)
     
     for i in range(0,numFrames):
         name = "/home/ubuntu/VoxLogicA2/src/frames/video_" + str(i) + ".png"
         skimage.io.imsave(name, frames[i])
+
+    now = time.time()
+    print(now)
 
     args = parser.parse_args()
     spec = args.filename.split(".")[0]
@@ -52,6 +55,9 @@ def main():
     subprocess.run("mv /home/ubuntu/VoxLogicA2/src/frames /home/ubuntu/VoxLogicA/src", shell=True)
     subprocess.run("mv /home/ubuntu/VoxLogicA2/src/" + spec + "-temporal-new-VL1.imgql /home/ubuntu/VoxLogicA/src", shell=True)
     subprocess.run("/home/ubuntu/VoxLogicA/releases/VoxLogicA_1.3.3-experimental_linux-x64/VoxLogicA " + spec + "-temporal-new-VL1.imgql", shell=True)
+
+    end = time.time()
+    print(end-now)
 
 if __name__ == "__main__":
     main()
